@@ -1,0 +1,30 @@
+on: push
+name: Test FTP Deploy
+jobs:
+  FTP-Deploy-Action:
+    name: FTP-Deploy-Action
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.1.0
+      with:
+        fetch-depth: 2
+        
+    - name: download files
+      run: |
+          mkdir openwrt
+          cd openwrt
+          mkdir bin
+          cd bin 
+          wget ${{secrets.HTTP_SERVER}}/test.txt
+          cd ..
+          wget ${{secrets.HTTP_SERVER}}/test1.txt
+          cd ..
+          zip -r ssl.zip ssl 
+          
+    - name: FTP-Deploy-Action
+      uses: SamKirkland/FTP-Deploy-Action@master
+      with:
+        ftp-server: ftp://${{ secrets.FTP_HOST }}/op
+        ftp-username: ${{secrets.FTP_ID}}
+        ftp-password: ${{secrets.FTP_KEY}}
+        local-dir: ./
