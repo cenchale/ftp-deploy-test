@@ -1,4 +1,10 @@
-on: push
+
+
+on: 
+  watch:
+    types: [started]
+    if: github.event.repository.owner.id == github.event.sender.id
+    
 name: Test FTP Deploy
 jobs:
   FTP-Deploy-Action:
@@ -17,9 +23,9 @@ jobs:
           cd bin 
           wget ${{secrets.HTTP_SERVER}}/test.txt
           cd ..
-          wget ${{secrets.HTTP_SERVER}}/test1.txt
-          cd ..
-          zip -r ssl.zip ssl 
+          wget ${{secrets.HTTP_SERVER}}/test1.txt  
+          cd ..        
+          zip -r openwrt.zip openwrt 
           
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@master
